@@ -41,20 +41,18 @@ class MLP:
         for i in range(0, len(self.layers)):
             print(self.layers[i])
 
-    # Init weights between -0.25 and 0.25
+    # Init weights
     def init_weights(self):
         for i in range(self.numberOfLayers - 1):
             self.weights.append(np.zeros((self.layers[i].size,
                                           self.layers[i + 1].size)))
-
-        for i in range(len(self.weights)):
-            z = np.random.random((self.layers[i].size, self.layers[i + 1].size))
-            self.weights[i][...] = (2 * z - 1) * 0.25
+        self.reset_weights()
 
     def print_weights(self):
         for i in range(0, len(self.weights)):
             print(self.weights[i])
 
+    # Init weights between -0.25 and 0.25
     def reset_weights(self):
         for i in range(len(self.weights)):
             z = np.random.random((self.layers[i].size, self.layers[i + 1].size))
