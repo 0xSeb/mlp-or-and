@@ -62,8 +62,8 @@ class MLP:
 
     def propagate_forward(self, data):
         # Initialisation de la couche d'entrée
-        self.layers[0][0] = data["input"][0]
-        self.layers[0][1] = data["input"][1]
+        for i in range(0, len(self.layers[0])):
+            self.layers[0][i] = data["input"][i]
         # propagation avant de la couche précédente vers la couche suivante
         for i in range(1, self.numberOfLayers):
             self.layers[i][...] = sigmoid(np.dot(self.layers[i - 1], self.weights[i - 1]))
