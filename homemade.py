@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 andDataset = [
     {'input': [0, 0], 'expected_result': 0},
@@ -29,7 +30,7 @@ class MLP:
         self.shape = args
         self.layers = []
         self.weights = []
-
+        self.errorValues = []
         self.init_layers()
         self.init_weights()
 
@@ -93,18 +94,35 @@ class MLP:
             self.weights[i] += learning_rate * delta_weigth
 
         # Return error pour print pendant les tests
-        return (error ** 2).sum()
+        quadraticError = (error ** 2).sum()
+        self.errorValues.append((error ** 2).sum())
+        return quadraticError
+
+    def printErrorGraph(self,data):
+        print(len(data))
+        print(data)
+        graph = plt.figure()
+        plt.plot([x for x in range(len(data))], data)
+        #plt.savefig("myfig.png")
+        plt.show()
 
 
 if __name__ == '__main__':
     mlp = MLP(2, 10, 1)
 
+
     def learn(data, epochs, learning_rate):
         mlp.reset_weights()
+        averageErrors = []
         for i in range(epochs):
-            n = np.random.randint(len(data))
-            mlp.propagate_forward(data[n])
-            mlp.propagate_backward(data[n], learning_rate)
+            mlp.errorValues = []
+            for j in range(len(data)):
+                n = np.random.randint(len(data))
+                mlp.propagate_forward(data[n])
+                mlp.propagate_backward(data[n], learning_rate)
+            # Après cette boucle, len(mlp.errorValue)= 4
+            averageErrors.append(np.mean(mlp.errorValues))
+        mlp.printErrorGraph(averageErrors)
 
         # Test
         for i in range(len(data)):
@@ -114,5 +132,5 @@ if __name__ == '__main__':
             print('\n')
 
 
-    learn(andDataset, 25000, 0.1)
-    learn(orDataset, 25000, 0.1)
+    learn(andDataset, 10000, 0.01)
+    #learn(orDataset, 2500, 0.01)
